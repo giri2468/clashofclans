@@ -1,6 +1,6 @@
 # API Contract
 
-All endpoints are under `/api/v1` and return JSON. Errors have `{ "code", "message", "fieldErrors"? }`.
+All application endpoints are under `/api/v1` relative to the Tomcat WAR context and return JSON. Errors have `{ "code", "message", "fieldErrors"? }`.
 
 | Method | Path | Purpose |
 | --- | --- | --- |

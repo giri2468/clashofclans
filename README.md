@@ -16,4 +16,4 @@ See `docs/` for the product, architecture, database, API, recommendation-engine,
 3. With JDK 8 and Maven installed, run `mvn clean package` from `backend`, then deploy `target/clash-coach-api-0.1.0-SNAPSHOT.war` to Tomcat 9's `webapps/` directory.
 4. Set `NEXT_PUBLIC_API_URL` to the deployed API URL, run `npm install && npm run build` in `frontend`, and serve the Next.js application.
 
-With the default WAR name, the backend is available at `http://localhost:8080/clash-coach-api/api/v1`; its health endpoint is `/api/v1/actuator/health` under that context path.
+With the default WAR name, the API base URL is `http://localhost:8080/clash-coach-api-0.1.0-SNAPSHOT/api/v1`. Its public health endpoint is `http://localhost:8080/clash-coach-api-0.1.0-SNAPSHOT/actuator/health`.
