@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: clash-coach-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/clash_coach}
+    username: ${DATABASE_USERNAME:clash_coach}
+    password: ${DATABASE_PASSWORD:clash_coach}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+server:
+  servlet:
+    context-path: /api/v1
+app:
+  security:
+    jwt-secret: ${JWT_SECRET:change-this-development-secret-to-at-least-32-bytes}
+    token-ttl: PT8H
+  clash:
+    base-url: ${CLASH_API_BASE_URL:https://api.clashofclans.com/v1}
+    api-token: ${CLASH_API_TOKEN:}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

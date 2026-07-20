@@ -1,0 +1,3 @@
+package com.clashcoach.security;
+import javax.validation.Valid; import org.springframework.http.*; import org.springframework.web.bind.annotation.*;
+@RestController @RequestMapping("/auth") public class AuthController { private final AuthService service; public AuthController(AuthService service) { this.service = service; } @PostMapping("/register") @ResponseStatus(HttpStatus.CREATED) AuthDtos.AuthResponse register(@Valid @RequestBody AuthDtos.Credentials request) { return service.register(request); } @PostMapping("/login") AuthDtos.AuthResponse login(@Valid @RequestBody AuthDtos.Credentials request) { return service.login(request); } }

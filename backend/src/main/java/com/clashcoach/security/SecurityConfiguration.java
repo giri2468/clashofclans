@@ -1,0 +1,16 @@
+package com.clashcoach.security;
+
+import com.clashcoach.user.UserRepository; import javax.servlet.*; import javax.servlet.http.*; import java.io.IOException; import org.springframework.context.annotation.*; import org.springframework.http.HttpHeaders; import org.springframework.security.authentication.UsernamePasswordAuthenticationToken; import org.springframework.security.config.annotation.web.builders.HttpSecurity; import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; import org.springframework.security.config.http.SessionCreationPolicy; import org.springframework.security.core.authority.AuthorityUtils; import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; import org.springframework.security.crypto.password.PasswordEncoder; import org.springframework.security.web.*; import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; import org.springframework.stereotype.Component; import org.springframework.web.filter.OncePerRequestFilter;
+
+@Configuration @EnableWebSecurity
+public class SecurityConfiguration {
+    @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    @Bean SecurityFilterChain filterChain(HttpSecurity http, BearerFilter bearerFilter) throws Exception { return http.csrf(csrf -> csrf.disable()).cors(cors -> { }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/health").permitAll().anyRequest().authenticated()).addFilterBefore(bearerFilter, UsernamePasswordAuthenticationFilter.class).build(); }
+    @Bean org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() { org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration(); configuration.setAllowedOrigins(java.util.Arrays.asList("http://localhost:3000")); configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "OPTIONS")); configuration.setAllowedHeaders(java.util.Arrays.asList("Authorization", "Content-Type")); org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource(); source.registerCorsConfiguration("/**", configuration); return source; }
+}
+@Component
+class BearerFilter extends OncePerRequestFilter {
+    private final TokenService tokens; private final UserRepository users;
+    BearerFilter(TokenService tokens, UserRepository users) { this.tokens = tokens; this.users = users; }
+    @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException { String header = request.getHeader(HttpHeaders.AUTHORIZATION); if (header != null && header.startsWith("Bearer ")) { try { com.clashcoach.user.User user = users.findById(tokens.parse(header.substring(7))).orElseThrow(TokenService.InvalidTokenException::new); UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getId(), null, AuthorityUtils.NO_AUTHORITIES); org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(authentication); } catch (TokenService.InvalidTokenException ignored) { } } chain.doFilter(request, response); }
+}

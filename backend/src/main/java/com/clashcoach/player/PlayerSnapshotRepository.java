@@ -1,0 +1,1 @@
+package com.clashcoach.player; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface PlayerSnapshotRepository extends JpaRepository<PlayerSnapshot,UUID>{ Optional<PlayerSnapshot> findFirstByPlayerIdOrderByCapturedAtDesc(UUID playerId); }

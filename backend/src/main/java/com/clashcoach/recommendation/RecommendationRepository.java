@@ -1,0 +1,1 @@
+package com.clashcoach.recommendation; import com.clashcoach.player.PlayerSnapshot; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface RecommendationRepository extends JpaRepository<Recommendation,UUID>{ Optional<Recommendation> findFirstBySnapshotOrderByCreatedAtDesc(PlayerSnapshot snapshot); }

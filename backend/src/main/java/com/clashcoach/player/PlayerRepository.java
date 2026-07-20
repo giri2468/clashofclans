@@ -1,0 +1,1 @@
+package com.clashcoach.player; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface PlayerRepository extends JpaRepository<Player,UUID>{ Optional<Player> findByUserId(UUID userId); Optional<Player> findByPlayerTag(String playerTag); }
